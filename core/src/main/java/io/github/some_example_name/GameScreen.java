@@ -1,5 +1,7 @@
 package io.github.some_example_name;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
@@ -17,6 +19,8 @@ public class GameScreen implements Screen {
 	private BitmapFont font;
 	private Tarro tarro;
 	private Lluvia lluvia;
+	
+	private ArrayList<Bala> balas = new ArrayList<>();
 
 	   
 	//boolean activo = true;
@@ -27,7 +31,7 @@ public class GameScreen implements Screen {
         this.font = game.getFont();
 		  // load the images for the droplet and the bucket, 64x64 pixels each 	     
 		  Sound hurtSound = Gdx.audio.newSound(Gdx.files.internal("hurt.ogg"));
-		  tarro = new Tarro(new Texture(Gdx.files.internal("bucket.png")),hurtSound);
+		  tarro = new Tarro(new Texture(Gdx.files.internal("bucket.png")),new Texture(Gdx.files.internal("bullet.png")),hurtSound);
          
 	      // load the drop sound effect and the rain background "music" 
          Texture gota = new Texture(Gdx.files.internal("drop.png"));
@@ -63,8 +67,17 @@ public class GameScreen implements Screen {
 		font.draw(batch, "Vidas : " + tarro.getVidas(), 670, 475);
 		font.draw(batch, "HighScore : " + game.getHigherScore(), camera.viewportWidth/2-50, 475);
 		
+		
 		if (!tarro.estaHerido()) {
 			// movimiento del tarro desde teclado
+			for(int i = 0 ; i < balas.size() ; i++) {
+				Bala bala = balas.get(i);
+				bala.update();
+				if (bala.isDestroyed()) {
+					balas.remove(bala);
+					i--;
+				}
+			}
 	        tarro.actualizarMovimiento();        
 			// caida de la lluvia 
 	       if (!lluvia.actualizarMovimiento(tarro)) {
@@ -76,12 +89,19 @@ public class GameScreen implements Screen {
 	    	  dispose();
 	       }
 		}
+		for (Bala b : balas) {
+			b.draw(batch);
+		}
 		
-		tarro.dibujar(batch);
+		tarro.dibujar(batch, this);
 		lluvia.actualizarDibujoLluvia(batch);
 		
 		batch.end();
 	}
+	
+	public boolean agregarBala(Bala bala) {
+		return balas.add(bala)
+;	}
 
 	@Override
 	public void resize(int width, int height) {

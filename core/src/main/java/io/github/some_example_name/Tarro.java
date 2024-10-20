@@ -20,12 +20,15 @@ public class Tarro {
 	   private boolean herido = false;
 	   private int tiempoHeridoMax=50;
 	   private int tiempoHerido;
+
+	   private Texture texBala;
 	   
-	   
-	   public Tarro(Texture tex, Sound ss) {
+	   public Tarro(Texture tex, Texture texBala, Sound ss) {
 		   bucketImage = tex;
 		   sonidoHerido = ss;
 		   bucket = new Sprite(bucketImage);
+		   
+		   this.texBala = texBala;
 	   }
 	   
 		public int getVidas() {
@@ -53,7 +56,7 @@ public class Tarro {
 		  tiempoHerido=tiempoHeridoMax;
 		  sonidoHerido.play();
 	   }
-	   public void dibujar(SpriteBatch batch) {
+	   public void dibujar(SpriteBatch batch, GameScreen game) {
 		   if (!herido){
 			   bucket.draw(batch);
 		   }else{
@@ -61,6 +64,10 @@ public class Tarro {
 			   bucket.draw(batch);
 			   tiempoHerido--;
 			   if (tiempoHerido<=0) herido = false;
+		   }
+		   if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+			   Bala bala = new Bala(bucket.getX()+bucket.getWidth()/2-5,bucket.getY()+bucket.getHeight()-20,3,0,texBala);
+			   game.agregarBala(bala);
 		   }
 	   } 
 	   
@@ -80,6 +87,7 @@ public class Tarro {
 		   if(bucket.getY() < 0) bucket.setY(0);
 		   if(bucket.getY() > 480 - 64) bucket.setY(480-64);
 	   }
+	   
 	    
 
 	public void destruir() {
