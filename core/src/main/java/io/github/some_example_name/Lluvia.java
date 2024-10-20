@@ -37,8 +37,8 @@ public class Lluvia {
 	
 	private void crearGotaDeLluvia() {
 	      Rectangle raindrop = new Rectangle();
-	      raindrop.x = MathUtils.random(0, 800-64);
-	      raindrop.y = 480;
+	      raindrop.x = 800;
+	      raindrop.y = MathUtils.random(0, 480-64);
 	      raindrop.width = 64;
 	      raindrop.height = 64;
 	      rainDropsPos.add(raindrop);
@@ -52,15 +52,15 @@ public class Lluvia {
 	
    public boolean actualizarMovimiento(Tarro tarro) { 
 	   // generar gotas de lluvia 
-	   if(TimeUtils.nanoTime() - lastDropTime > 100000000) crearGotaDeLluvia();
+	   if(TimeUtils.nanoTime() - lastDropTime > 500000000) crearGotaDeLluvia();
 	  
 	   
 	   // revisar si las gotas cayeron al suelo o chocaron con el tarro
 	   for (int i=0; i < rainDropsPos.size; i++ ) {
 		  Rectangle raindrop = rainDropsPos.get(i);
-	      raindrop.y -= 300 * Gdx.graphics.getDeltaTime();
+	      raindrop.x -= 125 * Gdx.graphics.getDeltaTime();
 	      //cae al suelo y se elimina
-	      if(raindrop.y + 64 < 0) {
+	      if(raindrop.x + 64 < 0) {
 	    	  rainDropsPos.removeIndex(i); 
 	    	  rainDropsType.removeIndex(i);
 	      }

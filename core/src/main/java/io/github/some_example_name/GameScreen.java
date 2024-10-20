@@ -51,8 +51,8 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-		//limpia la pantalla con color azul obscuro.
-		ScreenUtils.clear(0, 0, 0.2f, 1);
+		//limpia la pantalla con color gris claro.
+		ScreenUtils.clear(0.7529f, 0.7529f, 0.7529f, 1);
 		//actualizar matrices de la cámara
 		camera.update();
 		//actualizar 
@@ -113,7 +113,6 @@ public class GameScreen implements Screen {
 	public void dispose() {
       tarro.destruir();
       lluvia.destruir();
-
 	}
 
 }
