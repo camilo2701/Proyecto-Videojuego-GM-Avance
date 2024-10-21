@@ -1,7 +1,6 @@
 package io.github.some_example_name;
 
 import java.util.ArrayList;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
@@ -10,6 +9,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 public class GameScreen implements Screen {
@@ -17,10 +17,17 @@ public class GameScreen implements Screen {
     private OrthographicCamera camera;
 	private SpriteBatch batch;	   
 	private BitmapFont font;
-	private Tarro tarro;
-	private Lluvia lluvia;
+	private Player player;
+	
 	
 	private ArrayList<Bala> balas = new ArrayList<>();
+	private ArrayList<LluviaAbstract> gotas = new ArrayList<>();
+	private float lastSpawn = 0f;
+	private float spawnInterval = 1.0f;
+	Texture gotaTex = new Texture(Gdx.files.internal("drop.png"));
+	Texture gotaMala = new Texture(Gdx.files.internal("dropBad.png"));
+	private Music rainMusic;
+	private Sound dropSound;
 
 	   
 	//boolean activo = true;
@@ -31,26 +38,27 @@ public class GameScreen implements Screen {
         this.font = game.getFont();
 		  // load the images for the droplet and the bucket, 64x64 pixels each 	     
 		  Sound hurtSound = Gdx.audio.newSound(Gdx.files.internal("hurt.ogg"));
-		  tarro = new Tarro(new Texture(Gdx.files.internal("bucket.png")),new Texture(Gdx.files.internal("bullet.png")),hurtSound);
+		  player = new Player(hurtSound);
          
 	      // load the drop sound effect and the rain background "music" 
-         Texture gota = new Texture(Gdx.files.internal("drop.png"));
-         Texture gotaMala = new Texture(Gdx.files.internal("dropBad.png"));
          
-         Sound dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
+         
+         
+         dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
         
-	     Music rainMusic = Gdx.audio.newMusic(Gdx.files.internal("rain.mp3"));
-         lluvia = new Lluvia(gota, gotaMala, dropSound, rainMusic);
-	      
+	     rainMusic = Gdx.audio.newMusic(Gdx.files.internal("rain.mp3"));
+	     
+	     rainMusic.setLooping(true);
+	     rainMusic.play();
+	     
+	     
 	      // camera
 	      camera = new OrthographicCamera();
 	      camera.setToOrtho(false, 800, 480);
 	      batch = new SpriteBatch();
 	      // creacion del tarro
-	      tarro.crear();
-	      
-	      // creacion de la lluvia
-	      lluvia.crear();
+	      //tarro.crear();
+	      	      
 	}
 
 	@Override
@@ -63,13 +71,11 @@ public class GameScreen implements Screen {
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		//dibujar textos
-		font.draw(batch, "Gotas totales: " + tarro.getPuntos(), 5, 475);
-		font.draw(batch, "Vidas : " + tarro.getVidas(), 670, 475);
+		font.draw(batch, "Gotas totales: " + player.getPuntos(), 5, 475);
+		font.draw(batch, "Vidas : " + player.getVidas(), 670, 475);
 		font.draw(batch, "HighScore : " + game.getHigherScore(), camera.viewportWidth/2-50, 475);
 		
-		
-		if (!tarro.estaHerido()) {
-			// movimiento del tarro desde teclado
+		if (!player.estaHerido()) {
 			for(int i = 0 ; i < balas.size() ; i++) {
 				Bala bala = balas.get(i);
 				bala.update();
@@ -78,23 +84,45 @@ public class GameScreen implements Screen {
 					i--;
 				}
 			}
-	        tarro.actualizarMovimiento();        
-			// caida de la lluvia 
-	       if (!lluvia.actualizarMovimiento(tarro)) {
-	    	  //actualizar HigherScore
-	    	  if (game.getHigherScore()<tarro.getPuntos())
-	    		  game.setHigherScore(tarro.getPuntos());  
-	    	  //ir a la ventana de finde juego y destruir la actual
-	    	  game.setScreen(new GameOverScreen(game));
-	    	  dispose();
-	       }
+			// movimiento del tarro desde teclado
+			player.actualizarMovimiento();    
+	        
+	        if (player.getVidas() <= 0) {
+	        	if (game.getHigherScore() < player.getPuntos()) {
+	        		game.setHigherScore(player.getPuntos());
+	        	}
+	        	game.setScreen(new GameOverScreen(game));
+	        	dispose();
+	        }
 		}
+		
+		lastSpawn += Gdx.graphics.getDeltaTime();
+		if (lastSpawn >= spawnInterval) {
+			if (MathUtils.random(1, 10) < 3) {
+				gotas.add(new GotaBuena(800, MathUtils.random(0, 480-64), gotaTex));
+			} else {
+				gotas.add(new GotaMala(800, MathUtils.random(0, 480-64), gotaMala));
+			}
+			
+			lastSpawn = 0f;
+		}
+		
+		for (int i = 0 ; i < gotas.size() ; i++) {
+			LluviaAbstract gota = gotas.get(i);
+			gota.update(Gdx.graphics.getDeltaTime());
+			gota.render(batch);
+		}
+		
+		checkCollision(player);
+		
+		
+		
 		for (Bala b : balas) {
 			b.draw(batch);
 		}
 		
-		tarro.dibujar(batch, this);
-		lluvia.actualizarDibujoLluvia(batch);
+		player.dibujar(batch, this);
+		
 		
 		batch.end();
 	}
@@ -102,6 +130,16 @@ public class GameScreen implements Screen {
 	public boolean agregarBala(Bala bala) {
 		return balas.add(bala)
 ;	}
+	
+	public void checkCollision(Player tarro) {
+		for (LluviaAbstract gota : gotas) {
+			if (gota.getArea().overlaps(tarro.getArea())) {
+				gota.checkCollision(tarro);
+				gotas.remove(gota);
+				break;
+			}
+		}
+	}
 
 	@Override
 	public void resize(int width, int height) {
@@ -110,7 +148,7 @@ public class GameScreen implements Screen {
 	@Override
 	public void show() {
 	  // continuar con sonido de lluvia
-	  lluvia.continuar();
+	  rainMusic.play();
 	}
 
 	@Override
@@ -120,7 +158,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void pause() {
-		lluvia.pausar();
+		rainMusic.stop();
 		game.setScreen(new PausaScreen(game, this)); 
 	}
 
@@ -131,8 +169,9 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void dispose() {
-      tarro.destruir();
-      lluvia.destruir();
+	  player.destruir();
+      rainMusic.dispose();
+      dropSound.dispose();
 	}
 
 }

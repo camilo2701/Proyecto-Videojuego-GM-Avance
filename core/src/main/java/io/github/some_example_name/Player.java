@@ -4,15 +4,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 
 
-public class Tarro {
-	   private Sprite bucket;
-	   private Texture bucketImage;
+public class Player {
+
 	   private Sound sonidoHerido;
 	   private int vidas = 3;
 	   private int puntos = 0;
@@ -20,15 +21,33 @@ public class Tarro {
 	   private boolean herido = false;
 	   private int tiempoHeridoMax=50;
 	   private int tiempoHerido;
-
-	   private Texture texBala;
 	   
-	   public Tarro(Texture tex, Texture texBala, Sound ss) {
-		   bucketImage = tex;
-		   sonidoHerido = ss;
-		   bucket = new Sprite(bucketImage);
+	   private Sprite bucket;
+	   private Texture texBala;
+	   private Texture imagen;
+	   private Animation animation;
+	   private float tiempo;
+	   private TextureRegion[] regionAnimation;
+	   private TextureRegion frameActual;
+	  
+	   
+	   public Player(Sound ss) {
 		   
-		   this.texBala = texBala;
+		   bucket = new Sprite(new Texture(Gdx.files.internal("clear.png")));
+		   sonidoHerido = ss;
+		   
+		   imagen = new Texture(Gdx.files.internal("cdcSpriteSheet64.png"));
+		   
+		   TextureRegion[][] tmp = TextureRegion.split(imagen, imagen.getWidth()/4, imagen.getHeight());
+		   
+		   regionAnimation = new TextureRegion[4];
+		   for (int i = 0 ; i < 4 ; i++) {
+			   regionAnimation[i] = tmp[0][i];
+		   }
+		   animation = new Animation(1, regionAnimation);
+		   tiempo = 0.5f;
+		   texBala = new Texture(Gdx.files.internal("bullet.png"));
+		   frameActual = regionAnimation[0];
 	   }
 	   
 		public int getVidas() {
@@ -39,17 +58,17 @@ public class Tarro {
 			return puntos;
 		}
 		public Rectangle getArea() {
-			return bucket.getBoundingRectangle();
+		    return bucket.getBoundingRectangle();
 		}
 		public void sumarPuntos(int pp) {
 			puntos+=pp;
 		}
 		
-	
-	   public void crear() {
-		   bucket.setCenterY(480 / 2 - 64 / 2);
-		   bucket.setX(20);
+		public void crear() {
+			bucket.setCenterY(480 / 2 - 96 / 2);
+			bucket.setX(20);
 	   }
+		
 	   public void dañar() {
 		  vidas--;
 		  herido = true;
@@ -57,6 +76,9 @@ public class Tarro {
 		  sonidoHerido.play();
 	   }
 	   public void dibujar(SpriteBatch batch, GameScreen game) {
+		   tiempo += Gdx.graphics.getDeltaTime();
+		   frameActual = (TextureRegion) animation.getKeyFrame(tiempo, true);
+		   batch.draw(frameActual, bucket.getX(), bucket.getY());
 		   if (!herido){
 			   bucket.draw(batch);
 		   }else{
@@ -66,7 +88,7 @@ public class Tarro {
 			   if (tiempoHerido<=0) herido = false;
 		   }
 		   if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-			   Bala bala = new Bala(bucket.getX()+bucket.getWidth()/2-5,bucket.getY()+bucket.getHeight()-20,3,0,texBala);
+			   Bala bala = new Bala(bucket.getX()+bucket.getWidth()/2-5,bucket.getY()+bucket.getHeight()-50,3,0,texBala);
 			   game.agregarBala(bala);
 		   }
 	   } 
@@ -85,13 +107,12 @@ public class Tarro {
 		   if(Gdx.input.isKeyPressed(Input.Keys.UP)) bucket.setY(bucket.getY() + velx * Gdx.graphics.getDeltaTime());
 		   // que no se salga de los bordes izq y der
 		   if(bucket.getY() < 0) bucket.setY(0);
-		   if(bucket.getY() > 480 - 64) bucket.setY(480-64);
+		   if(bucket.getY() > 480 - 96) bucket.setY(480-96);
 	   }
-	   
 	    
 
 	public void destruir() {
-		    bucketImage.dispose();
+		    imagen.dispose();
 	   }
 	
    public boolean estaHerido() {
