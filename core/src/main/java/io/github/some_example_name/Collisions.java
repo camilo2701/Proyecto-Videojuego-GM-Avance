@@ -4,5 +4,5 @@ import com.badlogic.gdx.math.Rectangle;
 
 public interface Collisions {
 	public Rectangle getArea();
-	public void checkCollision(Collisions obj);
+	public void manejarColision(Collisions obj);
 }

@@ -40,7 +40,7 @@ public class Bala implements Collisions{
 	}
 
 	@Override
-	public void checkCollision(Collisions obj) {
+	public void manejarColision(Collisions obj) {
 		if (obj instanceof Enemigo) {
 			destroyed = true;
 		}

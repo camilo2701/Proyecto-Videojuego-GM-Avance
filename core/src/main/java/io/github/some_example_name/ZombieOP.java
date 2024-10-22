@@ -11,10 +11,15 @@ public class ZombieOP extends Enemigo{
 	}
 
 	@Override
-	public void checkCollision(Collisions obj) {
+	public void manejarColision(Collisions obj) {
 		if (obj instanceof Bala) {
 			recibirDaño();
 		}
+	}
+
+	@Override
+	public int darPuntos() {
+		return 30;
 	}
 
 }

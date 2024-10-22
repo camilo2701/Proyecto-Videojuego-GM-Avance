@@ -29,7 +29,7 @@ public abstract class Enemigo implements Collisions{
 	}
 	
 	public void update(float delta) {
-		spr.setX(spr.getX() - 200 * delta);
+		spr.setX(spr.getX() - 500 * delta);
 		if (spr.getX() < 0 || spr.getX() + spr.getWidth() > 800) destroyed = true;
 		if (spr.getY() < 0 || spr.getY() + spr.getHeight() > Gdx.graphics.getHeight()) destroyed = true;
 	}
@@ -47,6 +47,5 @@ public abstract class Enemigo implements Collisions{
 		return spr.getBoundingRectangle();
 	}
 	
-	@Override
-	public abstract void checkCollision(Collisions tarro);
+	public abstract int darPuntos();
 }

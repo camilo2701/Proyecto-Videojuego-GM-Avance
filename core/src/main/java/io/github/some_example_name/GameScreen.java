@@ -2,6 +2,7 @@ package io.github.some_example_name;
 
 import java.util.ArrayList;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -72,12 +73,11 @@ public class GameScreen implements Screen {
 					Enemigo zombie = zombies.get(k);
 					if (bala.getArea().overlaps(zombie.getArea())) {
 						// la gota recibe daño y se verifica si se murio
-						bala.checkCollision(zombie);
-						zombie.checkCollision(bala);
+						bala.manejarColision(zombie);
+						zombie.manejarColision(bala);
 						
 						if (!zombie.estaVivo()) { 
-							if (zombie instanceof Zombie) player.sumarPuntos(10);
-							if (zombie instanceof ZombieOP) player.sumarPuntos(30);
+							player.sumarPuntos(zombie.darPuntos());
 							zombies.remove(zombie); // si murio, se remueve
 						}
 						// se remueve la bala y se reduce el indice de balas
@@ -121,17 +121,12 @@ public class GameScreen implements Screen {
 			Enemigo zombie = zombies.get(i);
 			zombie.update(Gdx.graphics.getDeltaTime());
 			zombie.render(batch);
-		}
-		
-		for (Enemigo zombie : zombies) {
 			if (zombie.getArea().overlaps(player.getArea())) {
-				player.checkCollision(zombie);
+				player.manejarColision(zombie);
 				zombies.remove(zombie);
 				break;
 			}
 		}
-		
-		
 		
 		for (Bala b : balas) {
 			b.draw(batch);
@@ -139,6 +134,10 @@ public class GameScreen implements Screen {
 		
 		player.dibujar(batch, this);
 		
+		
+		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+			game.setScreen(new PausaScreen(game, this));
+		}
 		
 		batch.end();
 	}

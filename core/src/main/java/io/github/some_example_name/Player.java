@@ -126,7 +126,7 @@ public class Player implements Collisions{
 	}
 
 	@Override
-	public void checkCollision(Collisions obj) {
+	public void manejarColision(Collisions obj) {
 		if (obj instanceof Enemigo) {
 			dañar();
 		}
