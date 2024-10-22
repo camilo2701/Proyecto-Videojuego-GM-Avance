@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
-public class Bala {
+public class Bala implements Collisions{
 	
 	private int xSpeed;
 	private int ySpeed;
@@ -31,11 +31,18 @@ public class Bala {
 		spr.draw(batch);
 	}
 	
+	public boolean isDestroyed() {
+		return destroyed;
+	}
+	
 	public Rectangle getArea() {
 		return spr.getBoundingRectangle();
 	}
-	
-	public boolean isDestroyed() {
-		return destroyed;
+
+	@Override
+	public void checkCollision(Collisions obj) {
+		if (obj instanceof Enemigo) {
+			destroyed = true;
+		}
 	}
 }

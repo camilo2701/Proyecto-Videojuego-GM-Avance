@@ -6,7 +6,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -21,13 +20,10 @@ public class GameScreen implements Screen {
 	
 	
 	private ArrayList<Bala> balas = new ArrayList<>();
-	private ArrayList<Enemigo> gotas = new ArrayList<>();
+	private ArrayList<Enemigo> zombies = new ArrayList<>();
 	private float lastSpawn = 0f;
 	private float spawnInterval = 1.0f;
-	Texture gotaTex = new Texture(Gdx.files.internal("drop.png"));
-	Texture gotaMala = new Texture(Gdx.files.internal("dropBad.png"));
 	private Music rainMusic;
-	private Sound dropSound;
 
 	public GameScreen(final GameLluviaMenu game) {
 		this.game = game;
@@ -36,12 +32,8 @@ public class GameScreen implements Screen {
 		  // load the images for the droplet and the bucket, 64x64 pixels each 	     
 		  Sound hurtSound = Gdx.audio.newSound(Gdx.files.internal("hurt.ogg"));
          
-	      // load the drop sound effect and the rain background "music" 
+	      // load the rain background "music" 
          
-         
-         
-         dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
-        
 	     rainMusic = Gdx.audio.newMusic(Gdx.files.internal("rain.mp3"));
 	     
 	     rainMusic.setLooping(true);
@@ -76,19 +68,20 @@ public class GameScreen implements Screen {
 				Bala bala = balas.get(i);
 				bala.update();
 				
-				for (Enemigo gota : gotas) {
-					if (bala.getArea().overlaps(gota.getArea())) {
-						// suma puntos si le pega
-						player.sumarPuntos(10);
+				for (int k = 0 ; k < zombies.size() ; k++) {
+					Enemigo zombie = zombies.get(k);
+					if (bala.getArea().overlaps(zombie.getArea())) {
 						// la gota recibe daño y se verifica si se murio
-						gota.recibirDaño();
-						if (!gota.estaVivo()) {
-							gotas.remove(gota); // si murio, se remueve
+						bala.checkCollision(zombie);
+						zombie.checkCollision(bala);
+						
+						if (!zombie.estaVivo()) { 
+							if (zombie instanceof Zombie) player.sumarPuntos(10);
+							if (zombie instanceof ZombieOP) player.sumarPuntos(30);
+							zombies.remove(zombie); // si murio, se remueve
 						}
 						// se remueve la bala y se reduce el indice de balas
 						balas.remove(bala);
-						i--;
-						
 						
 						break;
 					}
@@ -116,21 +109,27 @@ public class GameScreen implements Screen {
 		lastSpawn += Gdx.graphics.getDeltaTime();
 		if (lastSpawn >= spawnInterval) {
 			if (MathUtils.random(1, 10) < 3) {
-				gotas.add(new Zombie(800, MathUtils.random(0, 480-96)));
+				zombies.add(new Zombie(800, MathUtils.random(0, 480-96)));
 			} else {
-				gotas.add(new ZombieOP(800, MathUtils.random(0, 480-96)));
+				zombies.add(new ZombieOP(800, MathUtils.random(0, 480-96)));
 			}
 			
 			lastSpawn = 0f;
 		}
 		
-		for (int i = 0 ; i < gotas.size() ; i++) {
-			Enemigo gota = gotas.get(i);
-			gota.update(Gdx.graphics.getDeltaTime());
-			gota.render(batch);
+		for (int i = 0 ; i < zombies.size() ; i++) {
+			Enemigo zombie = zombies.get(i);
+			zombie.update(Gdx.graphics.getDeltaTime());
+			zombie.render(batch);
 		}
 		
-		checkCollision(player);
+		for (Enemigo zombie : zombies) {
+			if (zombie.getArea().overlaps(player.getArea())) {
+				player.checkCollision(zombie);
+				zombies.remove(zombie);
+				break;
+			}
+		}
 		
 		
 		
@@ -147,16 +146,6 @@ public class GameScreen implements Screen {
 	public boolean agregarBala(Bala bala) {
 		return balas.add(bala)
 ;	}
-	
-	public void checkCollision(Player tarro) {
-		for (Enemigo gota : gotas) {
-			if (gota.getArea().overlaps(tarro.getArea())) {
-				gota.checkCollision(tarro);
-				gotas.remove(gota);
-				break;
-			}
-		}
-	}
 
 	@Override
 	public void resize(int width, int height) {
@@ -188,7 +177,6 @@ public class GameScreen implements Screen {
 	public void dispose() {
 	  player.destruir();
       rainMusic.dispose();
-      dropSound.dispose();
 	}
 
 }

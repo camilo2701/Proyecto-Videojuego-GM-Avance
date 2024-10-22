@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
-public abstract class Enemigo {
+public abstract class Enemigo implements Collisions{
 	protected boolean destroyed = false;
 	protected Sprite spr;
 	protected int vida;
@@ -38,13 +38,15 @@ public abstract class Enemigo {
 		spr.draw(batch);
 	}
 	
-	public Rectangle getArea() {
-		return spr.getBoundingRectangle();
-	}
-	
 	public boolean isDestroyed() {
 		return destroyed;
 	}
 	
-	public abstract void checkCollision(Player tarro);
+	@Override
+	public Rectangle getArea() {
+		return spr.getBoundingRectangle();
+	}
+	
+	@Override
+	public abstract void checkCollision(Collisions tarro);
 }

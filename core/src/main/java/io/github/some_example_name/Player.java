@@ -12,7 +12,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 
 
-public class Player {
+public class Player implements Collisions{
 
 	   private Sound sonidoHerido;
 	   private int vidas = 3;
@@ -65,9 +65,7 @@ public class Player {
 		public int getPuntos() {
 			return puntos;
 		}
-		public Rectangle getArea() {
-		    return bucket.getBoundingRectangle();
-		}
+		
 		public void sumarPuntos(int pp) {
 			puntos+=pp;
 		}
@@ -122,5 +120,16 @@ public class Player {
    public boolean estaHerido() {
 	   return herido;
    }
+   
+   	public Rectangle getArea() {
+	    return bucket.getBoundingRectangle();
+	}
+
+	@Override
+	public void checkCollision(Collisions obj) {
+		if (obj instanceof Enemigo) {
+			dañar();
+		}
+	}
 	   
 }

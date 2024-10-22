@@ -11,8 +11,10 @@ public class ZombieOP extends Enemigo{
 	}
 
 	@Override
-	public void checkCollision(Player tarro) {
-		tarro.dañar();
+	public void checkCollision(Collisions obj) {
+		if (obj instanceof Bala) {
+			recibirDaño();
+		}
 	}
 
 }
