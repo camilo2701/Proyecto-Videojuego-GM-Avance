@@ -21,7 +21,7 @@ public class GameScreen implements Screen {
 	
 	
 	private ArrayList<Bala> balas = new ArrayList<>();
-	private ArrayList<LluviaAbstract> gotas = new ArrayList<>();
+	private ArrayList<Enemigo> gotas = new ArrayList<>();
 	private float lastSpawn = 0f;
 	private float spawnInterval = 1.0f;
 	Texture gotaTex = new Texture(Gdx.files.internal("drop.png"));
@@ -29,16 +29,12 @@ public class GameScreen implements Screen {
 	private Music rainMusic;
 	private Sound dropSound;
 
-	   
-	//boolean activo = true;
-
 	public GameScreen(final GameLluviaMenu game) {
 		this.game = game;
         this.batch = game.getBatch();
         this.font = game.getFont();
 		  // load the images for the droplet and the bucket, 64x64 pixels each 	     
 		  Sound hurtSound = Gdx.audio.newSound(Gdx.files.internal("hurt.ogg"));
-		  player = new Player(hurtSound);
          
 	      // load the drop sound effect and the rain background "music" 
          
@@ -56,8 +52,8 @@ public class GameScreen implements Screen {
 	      camera = new OrthographicCamera();
 	      camera.setToOrtho(false, 800, 480);
 	      batch = new SpriteBatch();
-	      // creacion del tarro
-	      //tarro.crear();
+	      // creacion del player
+	      player = new Player(hurtSound);
 	      	      
 	}
 
@@ -80,7 +76,7 @@ public class GameScreen implements Screen {
 				Bala bala = balas.get(i);
 				bala.update();
 				
-				for (LluviaAbstract gota : gotas) {
+				for (Enemigo gota : gotas) {
 					if (bala.getArea().overlaps(gota.getArea())) {
 						// suma puntos si le pega
 						player.sumarPuntos(10);
@@ -120,16 +116,16 @@ public class GameScreen implements Screen {
 		lastSpawn += Gdx.graphics.getDeltaTime();
 		if (lastSpawn >= spawnInterval) {
 			if (MathUtils.random(1, 10) < 3) {
-				gotas.add(new GotaBuena(800, MathUtils.random(0, 480-64)));
+				gotas.add(new Zombie(800, MathUtils.random(0, 480-96)));
 			} else {
-				gotas.add(new GotaMala(800, MathUtils.random(0, 480-64)));
+				gotas.add(new ZombieOP(800, MathUtils.random(0, 480-96)));
 			}
 			
 			lastSpawn = 0f;
 		}
 		
 		for (int i = 0 ; i < gotas.size() ; i++) {
-			LluviaAbstract gota = gotas.get(i);
+			Enemigo gota = gotas.get(i);
 			gota.update(Gdx.graphics.getDeltaTime());
 			gota.render(batch);
 		}
@@ -153,7 +149,7 @@ public class GameScreen implements Screen {
 ;	}
 	
 	public void checkCollision(Player tarro) {
-		for (LluviaAbstract gota : gotas) {
+		for (Enemigo gota : gotas) {
 			if (gota.getArea().overlaps(tarro.getArea())) {
 				gota.checkCollision(tarro);
 				gotas.remove(gota);

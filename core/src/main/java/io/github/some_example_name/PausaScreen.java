@@ -18,7 +18,7 @@ public class PausaScreen implements Screen {
 
 	public PausaScreen (final GameLluviaMenu game, GameScreen juego) {
 		this.game = game;
-        this.juego = juego;
+        this.juego = juego;  
         this.batch = game.getBatch();
         this.font = game.getFont();
 		camera = new OrthographicCamera();

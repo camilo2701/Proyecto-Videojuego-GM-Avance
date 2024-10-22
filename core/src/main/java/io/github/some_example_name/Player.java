@@ -25,29 +25,37 @@ public class Player {
 	   private Sprite bucket;
 	   private Texture texBala;
 	   private Texture imagen;
-	   private Animation animation;
-	   private float tiempo;
-	   private TextureRegion[] regionAnimation;
-	   private TextureRegion frameActual;
+	   private TextureRegion[][] tmp;
+	   private Animation<TextureRegion> animacion;
+	   private float tiempo = 0f;
 	  
 	   
 	   public Player(Sound ss) {
 		   
-		   bucket = new Sprite(new Texture(Gdx.files.internal("clear.png")));
 		   sonidoHerido = ss;
 		   
 		   imagen = new Texture(Gdx.files.internal("cdcSpriteSheet64.png"));
 		   
-		   TextureRegion[][] tmp = TextureRegion.split(imagen, imagen.getWidth()/4, imagen.getHeight());
+		   tmp = TextureRegion.split(imagen, imagen.getWidth()/4, imagen.getHeight());
+		   TextureRegion[] frames = new TextureRegion[4];
+	       for (int i = 0; i < 4; i++) {
+	    	   TextureRegion frameActual = tmp[0][i];
+	    	   frames[i] = frameActual;
+	       }
+	       
+	       /*TextureRegion[] framesShooting = new TextureRegion[4];
+	       for (int i = 0; i < 4; i++) {
+	    	   TextureRegion frameActual = tmp[0][i];
+	    	   frames[i] = frameActual;
+	       }*/
+	       
+	       animacion = new Animation<TextureRegion>(0.5f, frames);
+	       
+	       /*animacion = new Animation<TextureRegion>(0.5f, frames);*/
 		   
-		   regionAnimation = new TextureRegion[4];
-		   for (int i = 0 ; i < 4 ; i++) {
-			   regionAnimation[i] = tmp[0][i];
-		   }
-		   animation = new Animation(1, regionAnimation);
-		   tiempo = 0.5f;
+		   bucket = new Sprite(frames[0]);
+		   bucket.setPosition(20, (480 / 2 - 96 / 2));
 		   texBala = new Texture(Gdx.files.internal("bullet.png"));
-		   frameActual = regionAnimation[0];
 	   }
 	   
 		public int getVidas() {
@@ -64,10 +72,6 @@ public class Player {
 			puntos+=pp;
 		}
 		
-		public void crear() {
-			bucket.setCenterY(480 / 2 - 96 / 2);
-			bucket.setX(20);
-	   }
 		
 	   public void dañar() {
 		  vidas--;
@@ -76,10 +80,10 @@ public class Player {
 		  sonidoHerido.play();
 	   }
 	   public void dibujar(SpriteBatch batch, GameScreen game) {
+		   TextureRegion frameActual = animacion.getKeyFrame(tiempo, true);
 		   tiempo += Gdx.graphics.getDeltaTime();
-		   frameActual = (TextureRegion) animation.getKeyFrame(tiempo, true);
-		   batch.draw(frameActual, bucket.getX(), bucket.getY());
 		   if (!herido){
+			   bucket.setRegion(frameActual);
 			   bucket.draw(batch);
 		   }else{
 			   bucket.setY(bucket.getY()+MathUtils.random(-5,5));
