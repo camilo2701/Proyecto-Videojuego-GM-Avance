@@ -79,10 +79,31 @@ public class GameScreen implements Screen {
 			for(int i = 0 ; i < balas.size() ; i++) {
 				Bala bala = balas.get(i);
 				bala.update();
+				
+				for (LluviaAbstract gota : gotas) {
+					if (bala.getArea().overlaps(gota.getArea())) {
+						// suma puntos si le pega
+						player.sumarPuntos(10);
+						// la gota recibe daño y se verifica si se murio
+						gota.recibirDaño();
+						if (!gota.estaVivo()) {
+							gotas.remove(gota); // si murio, se remueve
+						}
+						// se remueve la bala y se reduce el indice de balas
+						balas.remove(bala);
+						i--;
+						
+						
+						break;
+					}
+					
+				}
+				// verificar si se destruyeron por salir del area
 				if (bala.isDestroyed()) {
 					balas.remove(bala);
 					i--;
 				}
+				
 			}
 			// movimiento del tarro desde teclado
 			player.actualizarMovimiento();    
@@ -99,9 +120,9 @@ public class GameScreen implements Screen {
 		lastSpawn += Gdx.graphics.getDeltaTime();
 		if (lastSpawn >= spawnInterval) {
 			if (MathUtils.random(1, 10) < 3) {
-				gotas.add(new GotaBuena(800, MathUtils.random(0, 480-64), gotaTex));
+				gotas.add(new GotaBuena(800, MathUtils.random(0, 480-64)));
 			} else {
-				gotas.add(new GotaMala(800, MathUtils.random(0, 480-64), gotaMala));
+				gotas.add(new GotaMala(800, MathUtils.random(0, 480-64)));
 			}
 			
 			lastSpawn = 0f;

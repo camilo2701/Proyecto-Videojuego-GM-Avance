@@ -7,13 +7,21 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
 public abstract class LluviaAbstract {
-	private boolean destroyed = false;
-	private Sprite spr;
-	
+	protected boolean destroyed = false;
+	protected Sprite spr;
+	protected int vida;
 	
 	public LluviaAbstract(float x, float y, Texture tex) {
 		spr = new Sprite(tex);
 		spr.setPosition(x, y);
+	}
+	
+	public void recibirDaño() {
+		vida--;
+	}
+	
+	public boolean estaVivo() {
+		return vida > 0;
 	}
 	
 	public void update(float delta) {
