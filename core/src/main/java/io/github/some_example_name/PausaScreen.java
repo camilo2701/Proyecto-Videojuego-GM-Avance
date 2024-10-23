@@ -3,6 +3,7 @@ package io.github.some_example_name;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -15,6 +16,10 @@ public class PausaScreen implements Screen {
 	private SpriteBatch batch;	   
 	private BitmapFont font;
 	private OrthographicCamera camera;
+	private final int buttonHeight = 65;
+	private final int buttonWidth = 250;
+	private Texture resumeButton;
+	private Texture resumeButtonInactive;
 
 	public PausaScreen (final GameLluviaMenu game, GameScreen juego) {
 		this.game = game;
@@ -23,6 +28,9 @@ public class PausaScreen implements Screen {
         this.font = game.getFont();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
+		
+		resumeButton = new Texture(Gdx.files.internal("resume.png"));
+		resumeButtonInactive = new Texture(Gdx.files.internal("resumeIn.png"));
 	}
 
 	@Override
@@ -33,14 +41,24 @@ public class PausaScreen implements Screen {
 		batch.setProjectionMatrix(camera.combined);
 
 		batch.begin();
-		font.draw(batch, "Juego en Pausa ", 100, 150);
-		font.draw(batch, "Toca en cualquier lado para continuar !!!", 100, 100);
+		
+		/*font.draw(batch, "Juego en Pausa ", 100, 150);
+		font.draw(batch, "Toca en cualquier lado para continuar !!!", 100, 100);*/
+		
+		int x = 320 - buttonWidth / 2;
+		if (Gdx.input.getX() < x + buttonWidth && Gdx.input.getX() > x && 480 - Gdx.input.getY() < 40 + buttonHeight && 480 - Gdx.input.getY() > 40) {
+			batch.draw(resumeButtonInactive, 275, 40, buttonWidth, buttonHeight);
+			if (Gdx.input.isTouched()) {
+				game.setScreen(juego);
+				dispose();
+			}
+		} else {
+			batch.draw(resumeButton, 275, 40, buttonWidth, buttonHeight);
+		}
+		
 		batch.end();
 
-		if (Gdx.input.isTouched()) {
-			game.setScreen(juego);
-			dispose();
-		}
+		
 	}
 
 	@Override

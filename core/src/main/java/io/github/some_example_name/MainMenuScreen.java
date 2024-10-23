@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -16,6 +17,10 @@ public class MainMenuScreen implements Screen {
 	private BitmapFont font;
 	private OrthographicCamera camera;
 	private final Music menuMusic = Gdx.audio.newMusic(Gdx.files.internal("menuMusic.mp3"));
+	private final int buttonHeight = 65;
+	private final int buttonWidth = 250;
+	private Texture playButton;
+	private Texture playButtonInactive;
 
 	public MainMenuScreen(final GameLluviaMenu game) {
 		this.game = game;
@@ -23,6 +28,9 @@ public class MainMenuScreen implements Screen {
         this.font = game.getFont();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
+		
+		playButton = new Texture(Gdx.files.internal("play.png"));
+		playButtonInactive = new Texture(Gdx.files.internal("playIn.png"));
 	}
 
 	@Override
@@ -33,17 +41,27 @@ public class MainMenuScreen implements Screen {
 		batch.setProjectionMatrix(camera.combined);
 
 		batch.begin();
-		font.getData().setScale(2, 2);
+		
+		/*font.getData().setScale(2, 2);
 		font.draw(batch, "Bienvenido a Recolecta Gotas!!! ", 100, camera.viewportHeight/2+50);
 		font.draw(batch, "Toca en cualquier lugar para comenzar!", 100, camera.viewportHeight/2-50);
+		*/
+		
+		int x = 320 - buttonWidth / 2;
+		if (Gdx.input.getX() < x + buttonWidth && Gdx.input.getX() > x && 480 - Gdx.input.getY() < 40 + buttonHeight && 480 - Gdx.input.getY() > 40) {
+			batch.draw(playButtonInactive, 275, 40, buttonWidth, buttonHeight);
+			if (Gdx.input.isTouched()) {
+				game.setScreen(new GameScreen(game));
+				dispose();
+			}
+		} else {
+			batch.draw(playButton, 275, 40, buttonWidth, buttonHeight);
+		}
 		
 
 		batch.end();
 
-		if (Gdx.input.isTouched()) {
-			game.setScreen(new GameScreen(game));
-			dispose();
-		}
+		
 	}
 
 	@Override

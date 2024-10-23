@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -14,6 +15,11 @@ public class GameOverScreen implements Screen {
 	private BitmapFont font;
 	private OrthographicCamera camera;
 	private final Sound gameOverSound = Gdx.audio.newSound(Gdx.files.internal("gameOver.ogg"));
+	
+	private final int buttonHeight = 65;
+	private final int buttonWidth = 250;
+	private Texture restartButton;
+	private Texture restartButtonInactive;
 
 	public GameOverScreen(final GameLluviaMenu game) {
 		this.game = game;
@@ -21,6 +27,9 @@ public class GameOverScreen implements Screen {
         this.font = game.getFont();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
+		
+		restartButton = new Texture(Gdx.files.internal("restart.png"));
+		restartButtonInactive = new Texture(Gdx.files.internal("restartIn.png"));
 	}
 
 	@Override
@@ -30,14 +39,23 @@ public class GameOverScreen implements Screen {
 		batch.setProjectionMatrix(camera.combined);
 
 		batch.begin();
-		font.draw(batch, "PERDISTE ", 100, 200);
-		font.draw(batch, "Toca en cualquier lado para reiniciar.", 100, 100);
+		
+		/*font.draw(batch, "PERDISTE ", 100, 200);
+		font.draw(batch, "Toca en cualquier lado para reiniciar.", 100, 100);*/
+		
+		int x = 320 - buttonWidth / 2;
+		if (Gdx.input.getX() < x + buttonWidth && Gdx.input.getX() > x && 480 - Gdx.input.getY() < 40 + buttonHeight && 480 - Gdx.input.getY() > 40) {
+			batch.draw(restartButtonInactive, 275, 40, buttonWidth, buttonHeight);
+			if (Gdx.input.isTouched()) {
+				game.setScreen(new GameScreen(game));
+				dispose();
+			}
+		} else {
+			batch.draw(restartButton, 275, 40, buttonWidth, buttonHeight);
+		}
+		
 		batch.end();
 
-		if (Gdx.input.isTouched()) {
-			game.setScreen(new GameScreen(game));
-			dispose();
-		}
 	}
 
 	@Override
