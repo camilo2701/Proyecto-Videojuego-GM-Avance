@@ -24,9 +24,8 @@ public class Bala implements Collisions{
 		spr.setPosition(spr.getX() + xSpeed, spr.getY() + ySpeed);
 		if (spr.getX() < 0 || spr.getX() + spr.getWidth() > 800) destroyed = true;
 		if (spr.getY() < 0 || spr.getY() + spr.getHeight() > Gdx.graphics.getHeight()) destroyed = true;
-		
-		
 	}
+	
 	public void draw(SpriteBatch batch) {
 		spr.draw(batch);
 	}

@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -23,7 +22,7 @@ public class GameScreen implements Screen {
 	private ArrayList<Bala> balas = new ArrayList<>();
 	private ArrayList<Enemigo> zombies = new ArrayList<>();
 	private float lastSpawn = 0f;
-	private float spawnInterval = 1.0f;
+	private float spawnInterval = 0.8f;
 	private final Music gameMusic = Gdx.audio.newMusic(Gdx.files.internal("gameMusic.mp3"));
 
 	public GameScreen(final GameLluviaMenu game) {

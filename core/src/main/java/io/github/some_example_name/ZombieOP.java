@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 public class ZombieOP extends Enemigo{
 
 	public ZombieOP(float x, float y) {
-		super(x, y, new Texture(Gdx.files.internal("zombieOP.png")));
+		super(x, y, new Texture(Gdx.files.internal("zom2SpriteSheet.png")));
 		this.vida = 2;
 	}
 
