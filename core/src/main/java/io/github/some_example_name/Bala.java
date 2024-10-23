@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
-public class Bala implements Collisions{
+public class Bala implements Collisions, Areas{
 	
 	private int xSpeed;
 	private int ySpeed;

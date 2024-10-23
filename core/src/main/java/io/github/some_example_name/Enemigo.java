@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
-public abstract class Enemigo implements Collisions{
+public abstract class Enemigo implements Collisions, Areas{
 	protected boolean destroyed = false;
 	protected int vida;
 	protected Sound hurtSound;
