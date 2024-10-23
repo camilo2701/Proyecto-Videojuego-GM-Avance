@@ -16,7 +16,7 @@ public abstract class Enemigo implements Collisions{
 	public Enemigo(float x, float y, Texture tex) {
 		spr = new Sprite(tex);
 		spr.setPosition(x, y);
-		this.hurtSound = Gdx.audio.newSound(Gdx.files.internal("hurt.ogg"));
+		this.hurtSound = Gdx.audio.newSound(Gdx.files.internal("zombieHit.ogg"));
 	}
 	
 	public void recibirDaño() {

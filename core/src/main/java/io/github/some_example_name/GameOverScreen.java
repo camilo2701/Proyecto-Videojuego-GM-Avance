@@ -2,6 +2,7 @@ package io.github.some_example_name;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,6 +13,7 @@ public class GameOverScreen implements Screen {
 	private SpriteBatch batch;	   
 	private BitmapFont font;
 	private OrthographicCamera camera;
+	private final Sound gameOverSound = Gdx.audio.newSound(Gdx.files.internal("gameOver.ogg"));
 
 	public GameOverScreen(final GameLluviaMenu game) {
 		this.game = game;
@@ -40,8 +42,7 @@ public class GameOverScreen implements Screen {
 
 	@Override
 	public void show() {
-		// TODO Auto-generated method stub
-		
+		gameOverSound.play();
 	}
 
 	@Override
@@ -64,14 +65,12 @@ public class GameOverScreen implements Screen {
 
 	@Override
 	public void hide() {
-		// TODO Auto-generated method stub
-		
+		gameOverSound.stop();
 	}
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-		
+		gameOverSound.dispose();
 	}
 
 }

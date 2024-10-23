@@ -2,6 +2,7 @@ package io.github.some_example_name;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -14,6 +15,7 @@ public class MainMenuScreen implements Screen {
 	private SpriteBatch batch;
 	private BitmapFont font;
 	private OrthographicCamera camera;
+	private final Music menuMusic = Gdx.audio.newMusic(Gdx.files.internal("menuMusic.mp3"));
 
 	public MainMenuScreen(final GameLluviaMenu game) {
 		this.game = game;
@@ -34,6 +36,7 @@ public class MainMenuScreen implements Screen {
 		font.getData().setScale(2, 2);
 		font.draw(batch, "Bienvenido a Recolecta Gotas!!! ", 100, camera.viewportHeight/2+50);
 		font.draw(batch, "Toca en cualquier lugar para comenzar!", 100, camera.viewportHeight/2-50);
+		
 
 		batch.end();
 
@@ -45,8 +48,9 @@ public class MainMenuScreen implements Screen {
 
 	@Override
 	public void show() {
-		// TODO Auto-generated method stub
-		
+		menuMusic.setLooping(true);
+		menuMusic.setVolume(0.10f);
+		menuMusic.play();
 	}
 
 	@Override
@@ -69,14 +73,12 @@ public class MainMenuScreen implements Screen {
 
 	@Override
 	public void hide() {
-		// TODO Auto-generated method stub
-		
+		menuMusic.stop();
 	}
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-		
+		menuMusic.dispose();
 	}
 
 }

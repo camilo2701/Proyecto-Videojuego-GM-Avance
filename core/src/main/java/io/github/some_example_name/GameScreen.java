@@ -24,29 +24,19 @@ public class GameScreen implements Screen {
 	private ArrayList<Enemigo> zombies = new ArrayList<>();
 	private float lastSpawn = 0f;
 	private float spawnInterval = 1.0f;
-	private Music rainMusic;
+	private final Music gameMusic = Gdx.audio.newMusic(Gdx.files.internal("gameMusic.mp3"));
 
 	public GameScreen(final GameLluviaMenu game) {
 		this.game = game;
         this.batch = game.getBatch();
         this.font = game.getFont();
-		  // load the images for the droplet and the bucket, 64x64 pixels each 	     
-		  Sound hurtSound = Gdx.audio.newSound(Gdx.files.internal("hurt.ogg"));
-         
-	      // load the rain background "music" 
-         
-	     rainMusic = Gdx.audio.newMusic(Gdx.files.internal("rain.mp3"));
-	     
-	     rainMusic.setLooping(true);
-	     rainMusic.play();
-	     
-	     
+
 	      // camera
 	      camera = new OrthographicCamera();
 	      camera.setToOrtho(false, 800, 480);
 	      batch = new SpriteBatch();
 	      // creacion del player
-	      player = new Player(hurtSound);
+	      player = new Player();
 	      	      
 	}
 
@@ -97,7 +87,7 @@ public class GameScreen implements Screen {
 			// movimiento del tarro desde teclado
 			player.actualizarMovimiento();    
 	        
-	        if (player.getVidas() <= 0) {
+	        if (!player.estaVivo()) {
 	        	if (game.getHigherScore() < player.getPuntos()) {
 	        		game.setHigherScore(player.getPuntos());
 	        	}
@@ -153,7 +143,9 @@ public class GameScreen implements Screen {
 	@Override
 	public void show() {
 	  // continuar con sonido de lluvia
-	  rainMusic.play();
+		gameMusic.setLooping(true);
+	    gameMusic.setVolume(0.10f);
+	    gameMusic.play();
 	}
 
 	@Override
@@ -163,7 +155,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void pause() {
-		rainMusic.stop();
+		gameMusic.stop();
 		game.setScreen(new PausaScreen(game, this)); 
 	}
 
@@ -175,7 +167,7 @@ public class GameScreen implements Screen {
 	@Override
 	public void dispose() {
 	  player.destruir();
-      rainMusic.dispose();
+      gameMusic.dispose();
 	}
 
 }

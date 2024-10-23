@@ -35,6 +35,7 @@ public class Bala implements Collisions{
 		return destroyed;
 	}
 	
+	@Override
 	public Rectangle getArea() {
 		return spr.getBoundingRectangle();
 	}
