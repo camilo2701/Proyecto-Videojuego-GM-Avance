@@ -65,10 +65,13 @@ public class Player implements Collisions, Areas{
 	   }
 	   
 	   public int getVidas() {
+		   // getter de vidas
 		   return vida;
 	   }
 	   
-	   public void dañar() {
+	   public void recibirDaño() {
+		   // disminuye 1 a la vida del player, activa el estado de herido
+		   // y reproduce el sonido de éste
 		   vida--;
 		   herido = true;
 		   tiempoHerido=tiempoHeridoMax;
@@ -76,15 +79,18 @@ public class Player implements Collisions, Areas{
 	   }
 	   
 	   public boolean estaVivo() {
+		   // si no le quedan vidas, retorna false
 		   return vida > 0;
 	   }
 	
 	   public int getPuntos() {
+		   // getter de puntos
 		   return puntos;
 	   }
 		
-	   public void sumarPuntos(int pp) {
-		   puntos+=pp;
+	   public void setPuntos(int pp) {
+		   // setter sumador de puntos
+		   this.puntos+=pp;
 	   }
 	   
 	   public void disparar(GameScreen game) {
@@ -147,24 +153,27 @@ public class Player implements Collisions, Areas{
 	    
 
 	   public void destruir() {
+		   // se le hace dispose() a la sheet animada
 		   imagen.dispose();
 	   }
 	   
 	   public boolean estaHerido() {
+		   // retorna true si el player se encuentra en estado herido
 		   return herido;
 	   }
 	   
 	   @Override
 	   public Rectangle getArea() {
+		   // retorna el Rectangle del Sprite
 		   return player.getBoundingRectangle();
 	   }
 	   
 	   @Override
 	   public void manejarColision(Collisions obj) {
-		   // si player colisionó con un cualquier instancia de enemigo (zombie, zombieOP),
-		   // el player se daña
+		   // si player colisionó con un cualquier tipo de enemigo (zombie o zombieOP),
+		   // el player recibe daño (poliformismo)
 		   if (obj instanceof Enemigo) {
-			   dañar();
+			   recibirDaño();
 		   }
 	   }
 	   

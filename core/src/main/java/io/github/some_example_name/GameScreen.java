@@ -35,11 +35,10 @@ public class GameScreen implements Screen {
         // camera
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
+        // batch
         batch = new SpriteBatch();
-        
         // background
         background = new Texture(Gdx.files.internal("background.png"));
-        
         // creacion del player
         player = new Player();      
 	}
@@ -56,8 +55,8 @@ public class GameScreen implements Screen {
 		// dibujar background
 		batch.draw(background, 0, 0);
 		// dibujar textos
-		font.draw(batch, "Puntos : " + player.getPuntos(), 5, 475);
-		font.draw(batch, "Vidas : " + player.getVidas(), 670, 475);
+		font.draw(batch, "Puntos : " + player.getPuntos(), 25, 475);
+		font.draw(batch, "Vidas : " + player.getVidas(), 720, 475);
 		font.draw(batch, "HighScore : " + game.getHigherScore(), camera.viewportWidth/2-50, 475);
 		
 		if (!player.estaHerido()) {
@@ -132,7 +131,7 @@ public class GameScreen implements Screen {
 					zombie.manejarColision(bala);
 					// verificar si el zombie quedó vivo
 					if (!zombie.estaVivo()) { 
-						player.sumarPuntos(zombie.darPuntos());
+						player.setPuntos(zombie.darPuntos());
 						zombies.remove(zombie); // si murio, se remueve
 					}
 					// se remueve la bala

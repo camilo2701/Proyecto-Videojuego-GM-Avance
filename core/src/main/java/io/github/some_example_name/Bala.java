@@ -14,6 +14,7 @@ public class Bala implements Collisions, Areas{
 	private Sprite spr;
 	
 	public Bala(float x, float y, int xSpeed, int ySpeed, Texture tex) {
+		// crear Sprite con Texture, setear posicion y velocidad
 		spr = new Sprite(tex);
 		spr.setPosition(x, y);
 		this.xSpeed = xSpeed;
@@ -21,12 +22,15 @@ public class Bala implements Collisions, Areas{
 	}
 	
 	public void update() {
+		// movimiento de la bala, cambiando la posicion considerando su velocidad
 		spr.setPosition(spr.getX() + xSpeed, spr.getY() + ySpeed);
+		// en caso de salir de los bordes, se destruye la bala
 		if (spr.getX() < 0 || spr.getX() + spr.getWidth() > 800) destroyed = true;
 		if (spr.getY() < 0 || spr.getY() + spr.getHeight() > Gdx.graphics.getHeight()) destroyed = true;
 	}
 	
 	public void draw(SpriteBatch batch) {
+		// dibujo de la baja
 		spr.draw(batch);
 	}
 	
@@ -41,6 +45,8 @@ public class Bala implements Collisions, Areas{
 
 	@Override
 	public void manejarColision(Collisions obj) {
+		// si bala colisionó con un cualquier tipo de enemigo (zombie o zombieOP),
+		// la bala se destruye (polimorfismo)
 		if (obj instanceof Enemigo) {
 			destroyed = true;
 		}
