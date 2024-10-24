@@ -5,43 +5,42 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 public class GameOverScreen implements Screen {
+	
 	private final GameLluviaMenu game;
-	private SpriteBatch batch;	   
-	private BitmapFont font;
+	private SpriteBatch batch;
 	private OrthographicCamera camera;
 	private final Sound gameOverSound = Gdx.audio.newSound(Gdx.files.internal("gameOver.ogg"));
 	
 	private final int buttonHeight = 65;
 	private final int buttonWidth = 250;
+	private Texture gameOver;
 	private Texture restartButton;
 	private Texture restartButtonInactive;
 
 	public GameOverScreen(final GameLluviaMenu game) {
 		this.game = game;
         this.batch = game.getBatch();
-        this.font = game.getFont();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
 		
+		gameOver = new Texture(Gdx.files.internal("gameOver.png"));
 		restartButton = new Texture(Gdx.files.internal("restart.png"));
 		restartButtonInactive = new Texture(Gdx.files.internal("restartIn.png"));
 	}
 
 	@Override
 	public void render(float delta) {
-		ScreenUtils.clear(0, 0, 0.2f, 1);
+		ScreenUtils.clear(0f, 0.1f, 0f, 1);
 		camera.update();
 		batch.setProjectionMatrix(camera.combined);
 
 		batch.begin();
 		
-		/*font.draw(batch, "PERDISTE ", 100, 200);
-		font.draw(batch, "Toca en cualquier lado para reiniciar.", 100, 100);*/
+		batch.draw(gameOver, 40, 80);
 		
 		int x = 320 - buttonWidth / 2;
 		if (Gdx.input.getX() < x + buttonWidth && Gdx.input.getX() > x && 480 - Gdx.input.getY() < 40 + buttonHeight && 480 - Gdx.input.getY() > 40) {

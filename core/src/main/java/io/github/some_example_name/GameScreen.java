@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 public class GameScreen implements Screen {
+	
 	final GameLluviaMenu game;
     private OrthographicCamera camera;
 	private SpriteBatch batch;	   
@@ -170,7 +171,6 @@ public class GameScreen implements Screen {
 	@Override
 	public void pause() {
 		gameMusic.stop();
-		game.setScreen(new PausaScreen(game, this)); 
 	}
 
 	@Override

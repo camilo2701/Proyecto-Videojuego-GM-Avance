@@ -14,7 +14,6 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Player implements Collisions, Areas{
 
-	   
 	   private int vida = 3;
 	   private int puntos = 0;
 	   private int velx = 400;

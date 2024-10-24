@@ -2,36 +2,38 @@ package io.github.some_example_name;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-
-public class PausaScreen implements Screen {
-
-	private final GameLluviaMenu game;
-	private GameScreen juego;
+public class TutorialScreen implements Screen{
+	
+	final GameLluviaMenu game;
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
 	private final int buttonHeight = 65;
 	private final int buttonWidth = 250;
-	private Texture skull;
-	private Texture resumeButton;
-	private Texture resumeButtonInactive;
-
-	public PausaScreen (final GameLluviaMenu game, GameScreen juego) {
+	private Music menuMusic;
+	private Texture keys;
+	private Texture intro;
+	private Texture startButton;
+	private Texture startButtonInactive;
+	
+	public TutorialScreen(final GameLluviaMenu game, Music menuMusic) {
 		this.game = game;
-        this.juego = juego;  
         this.batch = game.getBatch();
+        this.menuMusic = menuMusic;
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
-		
-		skull = new Texture(Gdx.files.internal("skull.png"));
-		resumeButton = new Texture(Gdx.files.internal("resume.png"));
-		resumeButtonInactive = new Texture(Gdx.files.internal("resumeIn.png"));
-	}
 
+		keys = new Texture(Gdx.files.internal("tutorialKeys.png"));
+		intro = new Texture(Gdx.files.internal("introduction.png"));
+		startButton = new Texture(Gdx.files.internal("start.png"));
+		startButtonInactive = new Texture(Gdx.files.internal("startIn.png"));
+	}
+	
 	@Override
 	public void render(float delta) {
 		ScreenUtils.clear(0f, 0.1f, 0f, 1);
@@ -40,24 +42,22 @@ public class PausaScreen implements Screen {
 		batch.setProjectionMatrix(camera.combined);
 
 		batch.begin();
-		
-		batch.draw(skull, 67, 80);
+		batch.draw(intro, 40, 100);
+		// dibujar texto explicativo para cada control
+        batch.draw(keys, 20, 120);
+
 		int x = 320 - buttonWidth / 2;
 		if (Gdx.input.getX() < x + buttonWidth && Gdx.input.getX() > x && 480 - Gdx.input.getY() < 40 + buttonHeight && 480 - Gdx.input.getY() > 40) {
-			batch.draw(resumeButtonInactive, 275, 40, buttonWidth, buttonHeight);
-			if (Gdx.input.isTouched()) {
-				game.setScreen(juego);
+			batch.draw(startButtonInactive, 275, 40, buttonWidth, buttonHeight);
+			if (Gdx.input.justTouched()) {
+				game.setScreen(new GameScreen(game));
 				dispose();
 			}
-		} else {
-			batch.draw(resumeButton, 275, 40, buttonWidth, buttonHeight);
-		}
+		} else batch.draw(startButton, 275, 40, buttonWidth, buttonHeight);
 		
 		batch.end();
-
-		
 	}
-
+	
 	@Override
 	public void show() {
 		// TODO Auto-generated method stub
@@ -90,9 +90,9 @@ public class PausaScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-		
+		menuMusic.dispose();
+		startButton.dispose();
+		startButtonInactive.dispose();
 	}
 
 }
-
