@@ -1,4 +1,4 @@
-package io.github.some_example_name;
+package classes;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -6,7 +6,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
-public class Bala implements Collisions, Areas{
+import interfaces.Collisions;
+
+public class Bala implements Collisions{
 	
 	private int xSpeed;
 	private int ySpeed;
@@ -38,7 +40,6 @@ public class Bala implements Collisions, Areas{
 		return destroyed;
 	}
 	
-	@Override
 	public Rectangle getArea() {
 		return spr.getBoundingRectangle();
 	}

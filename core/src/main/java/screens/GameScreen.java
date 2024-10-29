@@ -1,4 +1,4 @@
-package io.github.some_example_name;
+package screens;
 
 import java.util.ArrayList;
 import com.badlogic.gdx.Gdx;
@@ -9,8 +9,12 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
+
+import classes.Bala;
+import classes.Enemigo;
+import classes.Player;
+import classes.Spawner;
 
 public class GameScreen implements Screen {
 	
@@ -19,11 +23,11 @@ public class GameScreen implements Screen {
 	private SpriteBatch batch;	   
 	private BitmapFont font;
 	private Player player;
+	private Spawner spawner;
 	
 	private ArrayList<Bala> balas = new ArrayList<>();
 	private ArrayList<Enemigo> zombies = new ArrayList<>();
-	private float lastSpawn = 0f;
-	private float spawnInterval = 0.8f;
+
 	private final Music gameMusic = Gdx.audio.newMusic(Gdx.files.internal("gameMusic.mp3"));
 	private Texture background;
 
@@ -40,7 +44,9 @@ public class GameScreen implements Screen {
         // background
         background = new Texture(Gdx.files.internal("background.png"));
         // creacion del player
-        player = new Player();      
+        player = new Player();   
+        // creacion del spawner
+        spawner = new Spawner();
 	}
 
 	@Override
@@ -75,7 +81,7 @@ public class GameScreen implements Screen {
 		}
 		
 		// spawn de zombies aleatorios
-		this.zombieSpawner();
+		spawner.zombieSpawner(zombies);
 		// verificar si existen colisiones entre zombies y el player
 		this.checkPlayerCollision();
 		// si existen balas disparadas, se dibujan
@@ -89,19 +95,6 @@ public class GameScreen implements Screen {
 		}
 		
 		batch.end();
-	}
-	
-	public void zombieSpawner() {
-		lastSpawn += Gdx.graphics.getDeltaTime();
-		if (lastSpawn >= spawnInterval) {
-			if (MathUtils.random(1, 10) < 3) {
-				zombies.add(new Zombie(800, MathUtils.random(0, 480-96)));
-			} else {
-				zombies.add(new ZombieOP(800, MathUtils.random(0, 480-96)));
-			}
-			
-			lastSpawn = 0f;
-		}
 	}
 	
 	public void checkPlayerCollision() {

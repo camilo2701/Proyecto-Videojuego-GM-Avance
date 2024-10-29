@@ -1,4 +1,4 @@
-package io.github.some_example_name;
+package classes;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -11,8 +11,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 
+import interfaces.Collisions;
+import interfaces.DamageControl;
+import screens.GameScreen;
 
-public class Player implements Collisions, Areas{
+public class Player implements Collisions, DamageControl{
 
 	   private int vida = 3;
 	   private int puntos = 0;
@@ -67,15 +70,6 @@ public class Player implements Collisions, Areas{
 	   public int getVidas() {
 		   // getter de vidas
 		   return vida;
-	   }
-	   
-	   public void recibirDaño() {
-		   // disminuye 1 a la vida del player, activa el estado de herido
-		   // y reproduce el sonido de éste
-		   vida--;
-		   herido = true;
-		   tiempoHerido=tiempoHeridoMax;
-		   sonidoHerido.play();
 	   }
 	   
 	   public boolean estaVivo() {
@@ -162,10 +156,19 @@ public class Player implements Collisions, Areas{
 		   return herido;
 	   }
 	   
-	   @Override
 	   public Rectangle getArea() {
 		   // retorna el Rectangle del Sprite
 		   return player.getBoundingRectangle();
+	   }
+	   
+	   @Override
+	   public void recibirDaño() {
+		   // disminuye 1 a la vida del player, activa el estado de herido
+		   // y reproduce el sonido de éste
+		   vida--;
+		   herido = true;
+		   tiempoHerido=tiempoHeridoMax;
+		   sonidoHerido.play();
 	   }
 	   
 	   @Override

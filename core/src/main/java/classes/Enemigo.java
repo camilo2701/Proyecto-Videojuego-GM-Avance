@@ -1,4 +1,4 @@
-package io.github.some_example_name;
+package classes;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
@@ -9,7 +9,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
-public abstract class Enemigo implements Collisions, Areas{
+import interfaces.Collisions;
+import interfaces.DamageControl;
+
+public abstract class Enemigo implements Collisions, DamageControl{
 	
 	protected boolean destroyed = false;
 	protected int vida;
@@ -40,12 +43,6 @@ public abstract class Enemigo implements Collisions, Areas{
 		
 	}
 	
-	public void recibirDaño() {
-		// disminuye 1 a la vida del enemigo y reproduce sonido de herido
-		vida--;
-		hurtSound.play();
-	}
-	
 	public boolean estaVivo() {
 		return vida > 0;
 	}
@@ -73,9 +70,15 @@ public abstract class Enemigo implements Collisions, Areas{
 		return destroyed;
 	}
 	
-	@Override
 	public Rectangle getArea() {
 		return spr.getBoundingRectangle();
+	}
+	
+	@Override
+	public void recibirDaño() {
+		// disminuye 1 a la vida del enemigo y reproduce sonido de herido
+		vida--;
+		hurtSound.play();
 	}
 	
 	public abstract int darPuntos();
