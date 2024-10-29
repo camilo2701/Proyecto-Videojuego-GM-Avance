@@ -87,7 +87,7 @@ public class Player implements Collisions, DamageControl{
 		   this.puntos+=pp;
 	   }
 	   
-	   public void disparar(GameScreen game) {
+	   public void disparar(GameScreen game, Spawner spawn) {
 		   // se setea estado disparando true para control de la animacion
 		   disparando = true;
 		   // se setea tiempoDisparo 0 ya que player acaba de dispara
@@ -95,7 +95,7 @@ public class Player implements Collisions, DamageControl{
 		   // se crea la nueva bala en la posición correspondiente de acorde a la animación
 		   Bala bala = new Bala(player.getX()+player.getWidth()/2-5,player.getY()+player.getHeight()-50,3,0,texBala);
 		   // se agrega al arreglo de balas
-		   game.agregarBala(bala);
+		   spawn.agregarBala(bala);
 		   // se activa el sonido del disparo
 		   sonidoDisparo.play();
 	   }
@@ -134,12 +134,12 @@ public class Player implements Collisions, DamageControl{
 
 	   } 
 
-	   public void actualizarMovimiento(GameScreen game) { 
+	   public void actualizarMovimiento(GameScreen game, Spawner spawn) { 
 		   // movimiento desde teclado
 		   if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) player.setY(player.getY() - velx * Gdx.graphics.getDeltaTime());
 		   if(Gdx.input.isKeyPressed(Input.Keys.UP)) player.setY(player.getY() + velx * Gdx.graphics.getDeltaTime());
 		   // accion de disparo
-		   if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) disparar(game);
+		   if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) disparar(game, spawn);
 		   // que no se salga de los bordes izq y der
 		   if(player.getY() < 0) player.setY(0);
 		   if(player.getY() > 480 - 92) player.setY(480-92);

@@ -1,6 +1,5 @@
 package screens;
 
-import java.util.ArrayList;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -11,8 +10,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import classes.Bala;
-import classes.Enemigo;
 import classes.Player;
 import classes.Spawner;
 
@@ -25,8 +22,8 @@ public class GameScreen implements Screen {
 	private Player player;
 	private Spawner spawner;
 	
-	private ArrayList<Bala> balas = new ArrayList<>();
-	private ArrayList<Enemigo> zombies = new ArrayList<>();
+	//private ArrayList<Bala> balas = new ArrayList<>();
+	//private ArrayList<Enemigo> zombies = new ArrayList<>();
 
 	private final Music gameMusic = Gdx.audio.newMusic(Gdx.files.internal("gameMusic.mp3"));
 	private Texture background;
@@ -67,9 +64,9 @@ public class GameScreen implements Screen {
 		
 		if (!player.estaHerido()) {
 			// verificar si existen colisiones entre balas y zombies
-			this.checkBulletCollision();
+			spawner.checkBulletCollision(player);
 			// movimiento del player desde teclado
-			player.actualizarMovimiento(this);    
+			player.actualizarMovimiento(this, spawner);    
 			// si el player perdió, se setea Highscore en caso de corresponder
 	        if (!player.estaVivo()) {
 	        	if (game.getHigherScore() < player.getPuntos()) {
@@ -81,11 +78,12 @@ public class GameScreen implements Screen {
 		}
 		
 		// spawn de zombies aleatorios
-		spawner.zombieSpawner(zombies);
+		spawner.zombieSpawner();
 		// verificar si existen colisiones entre zombies y el player
-		this.checkPlayerCollision();
-		// si existen balas disparadas, se dibujan
-		for (Bala b : balas) b.draw(batch);
+		spawner.checkPlayerCollision(batch, player);
+		// si existen balas disparadas, se spawnean
+		spawner.bulletSpawner(batch);
+		//for (Bala b : balas) b.draw(batch);
 		// se dibuja al player, actualizando su animacion
 		player.dibujar(batch, this);
 		
@@ -96,52 +94,6 @@ public class GameScreen implements Screen {
 		
 		batch.end();
 	}
-	
-	public void checkPlayerCollision() {
-		for (int i = 0 ; i < zombies.size() ; i++) {
-			Enemigo zombie = zombies.get(i);
-			zombie.update(Gdx.graphics.getDeltaTime());
-			zombie.render(batch);
-			if (zombie.getArea().overlaps(player.getArea())) {
-				player.manejarColision(zombie);
-				zombies.remove(zombie);
-				break;
-			}
-		}
-	}
-	
-	public void checkBulletCollision() {
-		for(int i = 0 ; i < balas.size() ; i++) {
-			Bala bala = balas.get(i);
-			bala.update();
-			
-			for (int k = 0 ; k < zombies.size() ; k++) {
-				Enemigo zombie = zombies.get(k);
-				// verificar si colisiono una bala con un zombie
-				if (bala.getArea().overlaps(zombie.getArea())) {
-					// el zombie recibe daño y se verifica si se murio
-					bala.manejarColision(zombie);
-					zombie.manejarColision(bala);
-					// verificar si el zombie quedó vivo
-					if (!zombie.estaVivo()) { 
-						player.setPuntos(zombie.darPuntos());
-						zombies.remove(zombie); // si murio, se remueve
-					}
-					// se remueve la bala
-					balas.remove(bala);
-					break;
-				}
-			}
-			// verificar si se destruyeron por salir del area
-			if (bala.isDestroyed()) {
-				balas.remove(bala);
-			}
-		}
-	}
-	
-	public boolean agregarBala(Bala bala) {
-		return balas.add(bala)
-;	}
 
 	@Override
 	public void resize(int width, int height) {
