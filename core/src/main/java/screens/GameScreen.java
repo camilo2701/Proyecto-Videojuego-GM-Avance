@@ -21,9 +21,6 @@ public class GameScreen implements Screen {
 	private BitmapFont font;
 	private Player player;
 	private Spawner spawner;
-	
-	//private ArrayList<Bala> balas = new ArrayList<>();
-	//private ArrayList<Enemigo> zombies = new ArrayList<>();
 
 	private final Music gameMusic = Gdx.audio.newMusic(Gdx.files.internal("gameMusic.mp3"));
 	private Texture background;
@@ -40,8 +37,8 @@ public class GameScreen implements Screen {
         batch = new SpriteBatch();
         // background
         background = new Texture(Gdx.files.internal("background.png"));
-        // creacion del player
-        player = new Player();   
+        // obtención de la única instancia de Player
+        player = Player.getInstancia();  
         // creacion del spawner
         spawner = new Spawner();
 	}
@@ -102,7 +99,7 @@ public class GameScreen implements Screen {
 	@Override
 	public void show() {
 	  // continuar con sonido de lluvia
-		gameMusic.setLooping(true);
+;		gameMusic.setLooping(true);
 	    gameMusic.setVolume(0.10f);
 	    gameMusic.play();
 	}
@@ -124,7 +121,6 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void dispose() {
-	  player.destruir();
 	  background.dispose();
       gameMusic.dispose();
 	}

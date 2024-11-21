@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import classes.Player;
+
 public class GameOverScreen implements Screen {
 	
 	private final GameLluviaMenu game;
@@ -53,6 +55,7 @@ public class GameOverScreen implements Screen {
 		if (Gdx.input.getX() < x + buttonWidth && Gdx.input.getX() > x && 480 - Gdx.input.getY() < 40 + buttonHeight && 480 - Gdx.input.getY() > 40) {
 			batch.draw(restartButtonInactive, 275, 40, buttonWidth, buttonHeight);
 			if (Gdx.input.isTouched()) {
+				Player.getInstancia().reset();
 				game.setScreen(new GameScreen(game));
 				dispose();
 			}

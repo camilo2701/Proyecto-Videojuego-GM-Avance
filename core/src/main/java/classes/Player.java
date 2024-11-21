@@ -36,9 +36,12 @@ public class Player implements Collisions, DamageControl{
 	   private Animation<TextureRegion> animacionShooting;
 	   private float tiempo = 0f;
 	   private float tiempoDisparo = 0f;
-	  
 	   
-	   public Player() {
+	   // instancia única de la clase
+	   private static Player instancia;
+	   
+	   // constructor privado para evitar crear instancias externas
+	   private Player() {
 		   // se carga la imagen de la bala
 		   texBala = new Texture(Gdx.files.internal("bullet.png"));
 		   // se carga la sheet animada del player
@@ -67,8 +70,26 @@ public class Player implements Collisions, DamageControl{
 		   
 	   }
 	   
+	   // método público para obtener la instancia única
+	   public static Player getInstancia() {
+		   if (instancia == null) {
+			   instancia = new Player();
+		   }
+		   return instancia;
+	   }
+	   
+	   // método para reiniciar las stats y posición de Player al morir
+	   public void reset() {
+		   this.vida = 3;
+		   this.puntos = 0;
+		   this.herido = false;
+		   this.tiempoHerido = 0;
+		   this.disparando = false;
+		   player.setPosition(20, (480 / 2 - 92 / 2));
+	   }
+	   
+	   // getter de vidas
 	   public int getVidas() {
-		   // getter de vidas
 		   return vida;
 	   }
 	   
@@ -76,14 +97,14 @@ public class Player implements Collisions, DamageControl{
 		   // si no le quedan vidas, retorna false
 		   return vida > 0;
 	   }
-	
+	   
+	   // getter de puntos
 	   public int getPuntos() {
-		   // getter de puntos
 		   return puntos;
 	   }
 		
+	   // setter sumador de puntos
 	   public void setPuntos(int pp) {
-		   // setter sumador de puntos
 		   this.puntos+=pp;
 	   }
 	   
