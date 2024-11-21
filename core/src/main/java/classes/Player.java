@@ -37,7 +37,7 @@ public class Player implements Collisions, DamageControl{
 	   private float tiempo = 0f;
 	   private float tiempoDisparo = 0f;
 	   
-	   // instancia única de la clase
+	   // instancia única de la clase (Singleton)
 	   private static Player instancia;
 	   
 	   // constructor privado para evitar crear instancias externas

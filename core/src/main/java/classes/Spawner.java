@@ -6,6 +6,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 
+import interfaces.EnemyFactory;
+
 public class Spawner {
 	
 	private int prob;
@@ -15,10 +17,14 @@ public class Spawner {
 	private ArrayList<Bala> balas = new ArrayList<>();
 	private ArrayList<Enemigo> zombies = new ArrayList<>();
 	
+	// instancia para fabricar zombies (Abstract Factory)
+	private EnemyFactory fabricaZombies;
+	
 	public Spawner() {
 		this.prob = 3;
 		this.lastSpawn = 0f;
 		this.spawnInterval = 0.8f;
+		this.fabricaZombies = new ZombiesFactory();
 	}
 	
 	public boolean agregarBala(Bala bala) {
@@ -36,9 +42,11 @@ public class Spawner {
 		if (lastSpawn >= spawnInterval) {
 			// alta probabilidad de que aparezca un zombieOP
 			if (MathUtils.random(1, 10) < prob) {
-				zombies.add(new Zombie(800, MathUtils.random(0, 480-96)));
+				// se añade al arreglo de zombies la instancia fabricada de Zombie
+				zombies.add(fabricaZombies.crearZombie());
 			} else {
-				zombies.add(new ZombieOP(800, MathUtils.random(0, 480-96)));
+				// se añade al arreglo de zombies la instancia fabricada de ZombieOP
+				zombies.add(fabricaZombies.crearZombieOP());
 			}
 			
 			lastSpawn = 0f;
