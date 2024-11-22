@@ -63,11 +63,11 @@ public abstract class Enemigo implements Collisions, DamageControl{
 		hurtSound.play();
 	}
 	
-	public abstract int darPuntos();
+	protected abstract int darPuntos();
 	
 	// método abstracto update que las subclases deben implementar para la plantilla Template
-	public abstract void update(float delta);
+	protected abstract void update(float delta);
 	
 	// método abstracto render que las subclases deben implementar para la plantilla Template
-	public abstract void render(SpriteBatch batch);
+	protected abstract void render(SpriteBatch batch);
 }

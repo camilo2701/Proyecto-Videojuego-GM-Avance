@@ -37,7 +37,7 @@ public class ZombieOP extends Enemigo{
 	}
 	
 	@Override
-	public void update(float delta) {
+	protected void update(float delta) {
 		// movimiento del enemigo dependiendo de la estrategia de este
         movementStrategy.movimiento(spr, delta);
         // relentización del zombie en caso de ser herido
@@ -48,7 +48,7 @@ public class ZombieOP extends Enemigo{
 	}
 	
 	@Override
-	public void render(SpriteBatch batch) {
+	protected void render(SpriteBatch batch) {
 		// se almacena tiempo transcurrido en "tiempo"
 		tiempo += Gdx.graphics.getDeltaTime();
 		// se instancia variable para almacenar las imagenes de las animaciones en bucle
@@ -62,7 +62,7 @@ public class ZombieOP extends Enemigo{
 	}
 
 	@Override
-	public int darPuntos() {
+	protected int darPuntos() {
 		// cantidad de puntos que retorna zombieOP al ser eliminado
 		return 30;
 	}
