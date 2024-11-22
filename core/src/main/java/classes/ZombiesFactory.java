@@ -9,13 +9,13 @@ public class ZombiesFactory implements EnemyFactory {
 	@Override
 	public Enemigo crearZombie() {
 		// creación de Zombie
-		return new Zombie(800, MathUtils.random(0, 480-96));
+		return new Zombie(800, MathUtils.random(0, 480-96), new MovimientoLineal());
 	}
 
 	@Override
 	public Enemigo crearZombieOP() {
 		// creación de ZombieOP
-		return new ZombieOP(800, MathUtils.random(0, 480-96));
+		return new ZombieOP(800, MathUtils.random(0, 480-96), new MovimientoEspecial());
 	}
 	
 }

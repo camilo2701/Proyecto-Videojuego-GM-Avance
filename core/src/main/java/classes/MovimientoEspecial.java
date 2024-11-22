@@ -12,7 +12,7 @@ public class MovimientoEspecial implements MovementStrategy{
 		// se almacena tiempo transcurrido
         time += delta;
         // movimiento horizontal
-        float newX = spr.getX() - 400 * delta;
+        float newX = spr.getX() - 450 * delta;
         // movimiento especial
         float newY = (float) (spr.getY() + Math.sin(15 * time));
         // set de nueva posición

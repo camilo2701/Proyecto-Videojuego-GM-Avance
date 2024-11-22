@@ -56,8 +56,9 @@ public class Spawner {
 	public void checkPlayerCollision(SpriteBatch batch, Player player) {
 		for (int i = 0 ; i < zombies.size() ; i++) {
 			Enemigo zombie = zombies.get(i);
-			zombie.update(Gdx.graphics.getDeltaTime());
-			zombie.render(batch);
+			zombie.actualizacionEnemigo(Gdx.graphics.getDeltaTime(), batch);
+			//zombie.update(Gdx.graphics.getDeltaTime());
+			//zombie.render(batch);
 			// verificar si colisionó un zombie con el player
 			if (zombie.getArea().overlaps(player.getArea())) {
 				// el player recibe daño y el zombie se elimina
